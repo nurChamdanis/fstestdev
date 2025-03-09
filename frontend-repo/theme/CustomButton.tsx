@@ -5,12 +5,13 @@ interface CustomButtonProps {
     onClick: () => void;
     loading: boolean;
     text: string;
+    style?: React.CSSProperties;  
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({ onClick, loading, text }) => {
+export const CustomButton: React.FC<CustomButtonProps> = ({ onClick, loading, text, style }) => {
     return (
         <Button
-            style={{ height: "30px" }}
+            style={{ height: "30px", ...style }}  
             variant="contained"
             color="primary"
             onClick={onClick}
@@ -20,5 +21,3 @@ const CustomButton: React.FC<CustomButtonProps> = ({ onClick, loading, text }) =
         </Button>
     );
 };
-
-export default CustomButton;

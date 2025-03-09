@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import UpdateButton from "../components/UpdateButton"; // ✅ Halaman buat fetch data
-import {AddUsers} from "../components/AddUsers"; // ✅ Halaman buat insert data
+import {UpdateButton} from "../components/UpdateButton";  
+import {AddUsers} from "../components/AddUsers"; 
 
 const Home = () => {
     const [activePage, setActivePage] = useState<"fetch" | "insert" | null>(null);

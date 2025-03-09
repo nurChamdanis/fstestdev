@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { List, ListItem, ListItemText } from "@mui/material";
-import CustomButton from "../theme/CustomButton";
-import fetchUsers from "../apis/userApi"; 
-import User from "../apis/User";
+import {CustomButton} from "../theme/CustomButton";
+import {fetchUsers} from "../apis/userApi"; 
+import {User} from "../apis/User";
 
-const UpdateButton = () => {
+export const UpdateButton = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
 
     const handleFetchUsers = async () => {
         setLoading(true);
         try {
-            const { users } = await fetchUsers(); // 🔥 Ambil `users` dari response
+            const { users } = await fetchUsers();  
             setUsers(users);
         } catch (error) {
             console.error("Error fetching users:", error);
@@ -36,5 +36,4 @@ const UpdateButton = () => {
         </div>
     );
 };
-
-export default UpdateButton;
+ 
