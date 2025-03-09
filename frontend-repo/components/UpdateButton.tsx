@@ -25,11 +25,10 @@ export const UpdateButton = () => {
             console.log("Formatted Date:", formattedDate);
 
             const response = await fetchUsers(formattedDate);
-            console.log("API Response:", response);  // Log full response
-
+            console.log("API Response:", response);   
             if (!response || !response.users) {
                 console.warn("No users found!");
-                setUsers([]);  // Ensure the state updates correctly
+                setUsers([]);  
                 return;
             }
 
