@@ -121,19 +121,19 @@ const updateUserData = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.updateUserData = updateUserData;
 const fetchUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const noDoc = req.params.noDoc;
+        const id = req.params.id;
         const collectionId = req.params.collectionId;
-        const userData = yield (0, userCollection_1.fetchUserDocument)(noDoc);
+        const userData = yield (0, userCollection_1.fetchUserDocument)(id, collectionId);
         if (userData) {
             res.status(200).send(userData);
         }
         else {
-            res.status(404).send({ message: 'User not found' });
+            res.status(404).send({ message: "User not found" });
         }
     }
     catch (error) {
-        console.error('Error fetching user data:', error);
-        res.status(500).send({ error: 'Failed to fetch user data' });
+        console.error("Error fetching user data:", error);
+        res.status(500).send({ error: "Failed to fetch user data" });
     }
 });
 exports.fetchUserData = fetchUserData;

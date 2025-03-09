@@ -10,6 +10,6 @@ const router = express_1.default.Router();
 router.get('/:collectionId', authMiddleware_1.authMiddleware, api_1.initDocUSer);
 router.delete('/delete/:id/:collectionId', authMiddleware_1.authMiddleware, api_1.deleteUserData);
 router.put('/update', authMiddleware_1.authMiddleware, api_1.updateUserData);
-router.get('/fetch/:collectionId/:noDoc', authMiddleware_1.authMiddleware, api_1.fetchUserData);
+router.get('/fetch/:id/:collectionId', authMiddleware_1.authMiddleware, api_1.fetchUserData);
 router.post('/create', authMiddleware_1.authMiddleware, api_1.addUserData);
 exports.default = router;

@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/:collectionId', authMiddleware, initDocUSer);
 router.delete('/delete/:id/:collectionId', authMiddleware, deleteUserData);
 router.put('/update', authMiddleware, updateUserData);
-router.get('/fetch/:collectionId/:noDoc', authMiddleware, fetchUserData);
+router.get('/fetch/:id/:collectionId', authMiddleware, fetchUserData);
 router.post('/create', authMiddleware, addUserData);
 
 export default router;

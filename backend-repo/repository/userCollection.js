@@ -96,23 +96,22 @@ const checkUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         return null;
     }
 });
-const fetchUserDocument = (email) => __awaiter(void 0, void 0, void 0, function* () {
+const fetchUserDocument = (id, collectionId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const collections = yield db_1.db.collection("testdb").doc("users").listCollections(); // Await the collections list
-        for (const collection of collections) {
-            const snapshot = yield collection.get();
-            for (const doc of snapshot.docs) {
-                const data = doc.data();
-                if (data.email === email) {
-                    console.log(`Found document in collection ${collection.id} with ID ${doc.id}:`, data);
-                    return data;
-                }
-            }
+        const collectionRef = db_1.db.collection("testdb").doc("users").collection(collectionId);
+        const querySnapshot = yield collectionRef.where("id", "==", id).get();
+        if (querySnapshot.empty) {
+            console.warn(`No document found with field "id" = ${id} in collection ${collectionId}`);
+            return null;
         }
-        return null;
+        // Firestore `where` queries return multiple documents, but since `id` is unique, we take the first one
+        const userDoc = querySnapshot.docs[0];
+        const userData = userDoc.data();
+        console.log(`Found document:`, userData);
+        return userData;
     }
     catch (error) {
-        console.error('Error fetching user document:', error);
+        console.error("Error fetching user document:", error);
         return null;
     }
 });

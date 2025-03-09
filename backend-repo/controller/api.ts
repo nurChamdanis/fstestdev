@@ -79,17 +79,18 @@ export const updateUserData = async (req: Request, res: Response) => {
 
 export const fetchUserData = async (req: Request, res: Response) => {
     try {
-        const noDoc = req.params.noDoc as string;
+        const id = req.params.id as string;
         const collectionId = req.params.collectionId as string;
-        const userData = await fetchUserDocument(noDoc);
+
+        const userData = await fetchUserDocument(id, collectionId);
         if (userData) {
             res.status(200).send(userData);
         } else {
-            res.status(404).send({ message: 'User not found' });
+            res.status(404).send({ message: "User not found" });
         }
     } catch (error) {
-        console.error('Error fetching user data:', error);
-        res.status(500).send({ error: 'Failed to fetch user data' });
+        console.error("Error fetching user data:", error);
+        res.status(500).send({ error: "Failed to fetch user data" });
     }
 };
  

@@ -89,25 +89,29 @@ const checkUsers = async () => {
     }
 };
 
-export const fetchUserDocument = async (email: string): Promise<User | null> => {
+export const fetchUserDocument = async (id: string, collectionId: string): Promise<User | null> => {
     try {
-        const collections = await db.collection("testdb").doc("users").listCollections(); // Await the collections list
-        for (const collection of collections) {
-            const snapshot = await collection.get();
-            for (const doc of snapshot.docs) {
-                const data = doc.data();
-                if (data.email === email) {  
-                    console.log(`Found document in collection ${collection.id} with ID ${doc.id}:`, data);
-                    return data as User; 
-                }
-            }
+        const collectionRef = db.collection("testdb").doc("users").collection(collectionId);
+        const querySnapshot = await collectionRef.where("id", "==", id).get();
+
+        if (querySnapshot.empty) {
+            console.warn(`No document found with field "id" = ${id} in collection ${collectionId}`);
+            return null;
         }
-        return null;  
+
+        // Firestore `where` queries return multiple documents, but since `id` is unique, we take the first one
+        const userDoc = querySnapshot.docs[0];
+        const userData = userDoc.data();
+        console.log(`Found document:`, userData);
+
+        return userData as User;
     } catch (error) {
-        console.error('Error fetching user document:', error);
-        return null;  
+        console.error("Error fetching user document:", error);
+        return null;
     }
 };
+
+
 export const deleteUser = async (id: string, collectionId: string) => {
     try {
         console.log("deleteUser - Function Called!");
