@@ -1,6 +1,6 @@
-import * as admin from 'firebase-admin/firestore';
 import {db} from '../core/db';
 import { UpdateUser, User } from '../entities/user'; 
+import { collection, query, where  } from "firebase/firestore";
 const { format, subDays } = require('date-fns');
 
 const getPrevDate = () => { 
@@ -12,9 +12,9 @@ const getCurrentDate = () => {
     return format(new Date(), 'yyyyMMdd');
 }; 
 
-export const LoadUser = async () => {
+export const LoadUser = async (collectionId: string) => {
     try {
-        const userDocRef = db.collection("testdb").doc("users").collection(getCurrentDate()); 
+        const userDocRef = db.collection("testdb").doc("users").collection(collectionId); 
         const querySnapshot = await userDocRef.get(); 
         if (querySnapshot.empty) {
             console.log('No documents found for the current date.');
@@ -85,7 +85,7 @@ const checkUsers = async () => {
         return newCollectionID;
     } catch (error) {
         console.error('Error fetching user document:', error);
-        return null;  // Return null in case of error
+        return null;   
     }
 };
 
@@ -96,27 +96,41 @@ export const fetchUserDocument = async (email: string): Promise<User | null> => 
             const snapshot = await collection.get();
             for (const doc of snapshot.docs) {
                 const data = doc.data();
-                if (data.email === email) { // Use the provided email to find the document
+                if (data.email === email) {  
                     console.log(`Found document in collection ${collection.id} with ID ${doc.id}:`, data);
-                    return data as User; // Return the found user data, cast to User type
+                    return data as User; 
                 }
             }
         }
-        return null; // Return null if no user was found
+        return null;  
     } catch (error) {
         console.error('Error fetching user document:', error);
-        return null; // Return null in case of error
+        return null;  
     }
 };
+export const deleteUser = async (id: string, collectionId: string) => {
+    try {
+        console.log("deleteUser - Function Called!");
+        console.log("deleteUser - collectionId:", collectionId);
+        console.log("deleteUser - id:", id);
 
+        if (!id || !collectionId) {
+            throw new Error("Invalid parameters: 'id' and 'collectionId' are required.");
+        }
 
-export const deleteUser = async (noDoc: string, collectionId: string) => {
-    try {  
-        const userDocRef = db.collection("testdb").doc("users").collection(collectionId);
-        await userDocRef.doc(noDoc).delete();
-        return "delete success";
-    } catch (error) {
-        console.error('Error fetching user document:', error);
-        return null;
+        const userCollectionRef = db.collection("testdb").doc("users").collection(collectionId);
+        const querySnapshot = await userCollectionRef.where("id", "==", id).get();
+
+        if (querySnapshot.empty) {
+            console.log("No matching user found.");
+            return { success: false, message: "User not found" };
+        }
+
+        await Promise.all(querySnapshot.docs.map((doc) => doc.ref.delete()));
+
+        return { success: true, message: "User deleted successfully" };
+    } catch (error: any) {
+        console.error("Error deleting user document:", error);
+        return { success: false, message: error.message };
     }
-}
+};

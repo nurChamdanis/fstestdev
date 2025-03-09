@@ -11,13 +11,13 @@ const db = admin.firestore();
 export const initDocUSer = async (req: Request, res: Response) => { 
 
     try {
-    const querySnapshot = await db.collection('testdb').limit(1).get();
-
+        const collectionId = req.params.collectionId;
+        const querySnapshot = await db.collection('testdb').limit(1).get();
         if (querySnapshot.empty) {
             await db.collection('testdb').doc('initialDocument').set({ initialized: true });
             console.log('USERS collection created.');
         } else {
-            const users = await LoadUser();  
+            const users = await LoadUser(collectionId);  
             res.status(200).json(users);  
             return;  
         }
@@ -81,7 +81,7 @@ export const fetchUserData = async (req: Request, res: Response) => {
     try {
         const noDoc = req.params.noDoc as string;
         const collectionId = req.params.collectionId as string;
-        const userData = await fetchUserDocument(noDoc, collectionId);
+        const userData = await fetchUserDocument(noDoc);
         if (userData) {
             res.status(200).send(userData);
         } else {
@@ -95,13 +95,18 @@ export const fetchUserData = async (req: Request, res: Response) => {
  
 export const deleteUserData = async (req: Request, res: Response) => {
     try {
-        const noDoc = req.params.noDoc;
-        const collectionId = req.params.collectionId; 
-        console.log(collectionId);
-        const response = await deleteUser(noDoc, collectionId);
-        res.status(200).send({message: response}); 
-    } catch (error) { 
-        res.status(500).send({ error: 'Failed to fetch user data' });
+        const id = req.params.id;
+        const collectionId = req.params.collectionId;
+
+        console.log("deleteUserData - id:", id);
+        console.log("deleteUserData - collectionId:", collectionId);
+
+        const response = await deleteUser(id, collectionId);
+
+        console.log("deleteUser response:", response); // Cek hasil return
+        res.status(200).send({ message: response });
+    } catch (error) {
+        console.error("Error in deleteUserData:", error);
+        res.status(500).send({ error: 'Failed to delete user data' });
     }
 };
- 

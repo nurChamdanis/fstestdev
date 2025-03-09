@@ -54,13 +54,14 @@ const upload = (0, multer_1.default)();
 const db = admin.firestore();
 const initDocUSer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const collectionId = req.params.collectionId;
         const querySnapshot = yield db.collection('testdb').limit(1).get();
         if (querySnapshot.empty) {
             yield db.collection('testdb').doc('initialDocument').set({ initialized: true });
             console.log('USERS collection created.');
         }
         else {
-            const users = yield (0, userCollection_1.LoadUser)();
+            const users = yield (0, userCollection_1.LoadUser)(collectionId);
             res.status(200).json(users);
             return;
         }
@@ -122,7 +123,7 @@ const fetchUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const noDoc = req.params.noDoc;
         const collectionId = req.params.collectionId;
-        const userData = yield (0, userCollection_1.fetchUserDocument)(noDoc, collectionId);
+        const userData = yield (0, userCollection_1.fetchUserDocument)(noDoc);
         if (userData) {
             res.status(200).send(userData);
         }
@@ -138,14 +139,17 @@ const fetchUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.fetchUserData = fetchUserData;
 const deleteUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const noDoc = req.params.noDoc;
+        const id = req.params.id;
         const collectionId = req.params.collectionId;
-        console.log(collectionId);
-        const response = yield (0, userCollection_1.deleteUser)(noDoc, collectionId);
+        console.log("deleteUserData - id:", id);
+        console.log("deleteUserData - collectionId:", collectionId);
+        const response = yield (0, userCollection_1.deleteUser)(id, collectionId);
+        console.log("deleteUser response:", response); // Cek hasil return
         res.status(200).send({ message: response });
     }
     catch (error) {
-        res.status(500).send({ error: 'Failed to fetch user data' });
+        console.error("Error in deleteUserData:", error);
+        res.status(500).send({ error: 'Failed to delete user data' });
     }
 });
 exports.deleteUserData = deleteUserData;

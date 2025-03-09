@@ -1,11 +1,9 @@
-import * as admin from 'firebase-admin';
-import { getFirestore } from 'firebase-admin/firestore';
-import * as path from 'path';
+import * as admin from "firebase-admin";
+import { getFirestore } from "firebase-admin/firestore";
+import * as serviceAccount from "../config/serviceAccountKey.json";
 
-const serviceAccountPath = path.resolve(__dirname, '../config/serviceAccountKey.json');
-
-const firebaseApp = admin.initializeApp({ 
-    credential: admin.credential.cert(serviceAccountPath),
+const firebaseApp = admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),  
 });
- 
+
 export const db = getFirestore(firebaseApp);

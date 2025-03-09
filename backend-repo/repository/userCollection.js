@@ -19,9 +19,9 @@ const getPrevDate = () => {
 const getCurrentDate = () => {
     return format(new Date(), 'yyyyMMdd');
 };
-const LoadUser = () => __awaiter(void 0, void 0, void 0, function* () {
+const LoadUser = (collectionId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userDocRef = db_1.db.collection("testdb").doc("users").collection(getCurrentDate());
+        const userDocRef = db_1.db.collection("testdb").doc("users").collection(collectionId);
         const querySnapshot = yield userDocRef.get();
         if (querySnapshot.empty) {
             console.log('No documents found for the current date.');
@@ -93,7 +93,7 @@ const checkUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (error) {
         console.error('Error fetching user document:', error);
-        return null; // Return null in case of error
+        return null;
     }
 });
 const fetchUserDocument = (email) => __awaiter(void 0, void 0, void 0, function* () {
@@ -103,29 +103,40 @@ const fetchUserDocument = (email) => __awaiter(void 0, void 0, void 0, function*
             const snapshot = yield collection.get();
             for (const doc of snapshot.docs) {
                 const data = doc.data();
-                if (data.email === email) { // Use the provided email to find the document
+                if (data.email === email) {
                     console.log(`Found document in collection ${collection.id} with ID ${doc.id}:`, data);
-                    return data; // Return the found user data, cast to User type
+                    return data;
                 }
             }
         }
-        return null; // Return null if no user was found
-    }
-    catch (error) {
-        console.error('Error fetching user document:', error);
-        return null; // Return null in case of error
-    }
-});
-exports.fetchUserDocument = fetchUserDocument;
-const deleteUser = (noDoc, collectionId) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const userDocRef = db_1.db.collection("testdb").doc("users").collection(collectionId);
-        yield userDocRef.doc(noDoc).delete();
-        return "delete success";
+        return null;
     }
     catch (error) {
         console.error('Error fetching user document:', error);
         return null;
+    }
+});
+exports.fetchUserDocument = fetchUserDocument;
+const deleteUser = (id, collectionId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("deleteUser - Function Called!");
+        console.log("deleteUser - collectionId:", collectionId);
+        console.log("deleteUser - id:", id);
+        if (!id || !collectionId) {
+            throw new Error("Invalid parameters: 'id' and 'collectionId' are required.");
+        }
+        const userCollectionRef = db_1.db.collection("testdb").doc("users").collection(collectionId);
+        const querySnapshot = yield userCollectionRef.where("id", "==", id).get();
+        if (querySnapshot.empty) {
+            console.log("No matching user found.");
+            return { success: false, message: "User not found" };
+        }
+        yield Promise.all(querySnapshot.docs.map((doc) => doc.ref.delete()));
+        return { success: true, message: "User deleted successfully" };
+    }
+    catch (error) {
+        console.error("Error deleting user document:", error);
+        return { success: false, message: error.message };
     }
 });
 exports.deleteUser = deleteUser;

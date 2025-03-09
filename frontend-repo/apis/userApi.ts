@@ -10,6 +10,12 @@ interface SaveUserResponse {
     message: string;
 }
 
+interface DeleteUserResponse {
+    success: boolean;
+    message: string;
+}
+
+const DELETE_USERS = "http://127.0.0.1:3030/users/delete";
 const FETCH_USERS = "http://127.0.0.1:3030/users";
 const CREATED_USERS = "http://127.0.0.1:3030/users/create";
 const AUTH_HEADER = {
@@ -19,9 +25,9 @@ const AUTH_HEADER = {
     },
 };
  
-export const fetchUsers = async (): Promise<FetchUsersResponse> => {
+export const fetchUsers = async (txtDate: string): Promise<FetchUsersResponse> => {
     try {
-        const response = await axios.get(FETCH_USERS, AUTH_HEADER);
+        const response = await axios.get(FETCH_USERS+"/"+txtDate, AUTH_HEADER);
         return { users: response.data };
     } catch (error) {
         console.error("Error fetching users:", error);
@@ -36,5 +42,15 @@ export const saveUser = async (user: User): Promise<SaveUserResponse> => {
     } catch (error) {
         console.error("Error saving user:", error);
         return { success: false, message: "Failed to add user" };
+    }
+};
+
+export const deleteUsers = async (id: string, collectionId: string): Promise<DeleteUserResponse> => {
+    try {
+        const response = await axios.delete(`${DELETE_USERS}/${id}/${collectionId}`, AUTH_HEADER);
+        return { success: true, message: "User deleted successfully" };
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        return { success: false, message: "Failed to delete user" };
     }
 };

@@ -36,9 +36,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = void 0;
 const admin = __importStar(require("firebase-admin"));
 const firestore_1 = require("firebase-admin/firestore");
-const path = __importStar(require("path"));
-const serviceAccountPath = path.resolve(__dirname, '../config/serviceAccountKey.json');
+const serviceAccount = __importStar(require("../config/serviceAccountKey.json"));
 const firebaseApp = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccountPath),
+    credential: admin.credential.cert(serviceAccount),
 });
 exports.db = (0, firestore_1.getFirestore)(firebaseApp);
