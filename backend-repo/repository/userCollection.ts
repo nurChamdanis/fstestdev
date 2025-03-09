@@ -98,8 +98,7 @@ export const fetchUserDocument = async (id: string, collectionId: string): Promi
             console.warn(`No document found with field "id" = ${id} in collection ${collectionId}`);
             return null;
         }
-
-        // Firestore `where` queries return multiple documents, but since `id` is unique, we take the first one
+ 
         const userDoc = querySnapshot.docs[0];
         const userData = userDoc.data();
         console.log(`Found document:`, userData);
