@@ -14,15 +14,11 @@ export const UpdateButton = () => {
     const [selectedDate, setSelectedDate] = useState("");
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
-
-    // Editing states
+ 
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [EmailUpdate, setEmailUpdate] = useState("");
     const [NameUpdate, setNameUpdate] = useState("");
-
-    /**
-     * Whenever we set an editingUser, populate the local form states (EmailUpdate, NameUpdate)
-     */
+ 
     useEffect(() => {
         if (editingUser) {
             setEmailUpdate(editingUser.email);
@@ -86,10 +82,7 @@ export const UpdateButton = () => {
             console.error("Error fetching user details:", error);
         }
     };
-
-    /**
-     * Delete a user from local state and the backend
-     */
+ 
     const handleDeleteUser = async (userId: string) => {
         console.log("Deleting user with ID:", userId);
         if (!selectedDate) {

@@ -1,8 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import appReducer from "./appReducer"; // ✅ Pastikan path benar
+import appReducer from "./appReducer";  
 
 const rootReducer = combineReducers({
-    app: appReducer, // ✅ Pastikan "app" ada di sini
+    app: appReducer,  
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
