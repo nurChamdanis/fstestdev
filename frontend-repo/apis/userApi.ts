@@ -1,5 +1,5 @@
 import axios from "axios";
-import {User} from "./User";
+import {User, UpdateUser} from "./User";
 
 interface FetchUsersResponse {
     users: User[];
@@ -15,9 +15,24 @@ interface DeleteUserResponse {
     message: string;
 }
 
+interface IDUserResponse {
+    data: User[]
+    success: boolean;
+    message: string;
+}
+
+interface UpdateUserResponse {
+    data: User[]
+    success: boolean;
+    message: string;
+}
+
 const DELETE_USERS = "http://127.0.0.1:3030/users/delete";
 const FETCH_USERS = "http://127.0.0.1:3030/users";
+const ID_FETCH_USERS = "http://127.0.0.1:3030/users/fetch";
 const CREATED_USERS = "http://127.0.0.1:3030/users/create";
+const UPDATED_USERS = "http://127.0.0.1:3030/users/update";
+
 const AUTH_HEADER = {
     headers: {
         "Content-Type": "application/json",
@@ -52,5 +67,25 @@ export const deleteUsers = async (id: string, collectionId: string): Promise<Del
     } catch (error) {
         console.error("Error deleting user:", error);
         return { success: false, message: "Failed to delete user" };
+    }
+};
+
+export const getIdUsers = async (id: string, collectionId: string): Promise<IDUserResponse> => {
+    try {
+        const response = await axios.get(`${ID_FETCH_USERS}/${id}/${collectionId}`, AUTH_HEADER); 
+        return { success: true, message: "User found!", data: response.data };
+    } catch (error) {
+        console.error("Error fetching user:", error); 
+        return { success: false, message: "Failed to fetch user", data: null };
+    }
+};
+
+export const updateUser = async (updateUser: UpdateUser): Promise<UpdateUserResponse> => {
+    try {
+        const response = await axios.put(`${UPDATED_USERS}`, updateUser, AUTH_HEADER);
+        return { success: true, message: "User found!", data: response.data };
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        return { success: false, message: "Failed to fetch user", data: null };
     }
 };

@@ -89,26 +89,28 @@ const checkUsers = async () => {
     }
 };
 
-export const fetchUserDocument = async (id: string, collectionId: string): Promise<User | null> => {
+export const fetchUserDocument = async (id: string, collectionId: string): Promise<User[]> => {
     try {
         const collectionRef = db.collection("testdb").doc("users").collection(collectionId);
         const querySnapshot = await collectionRef.where("id", "==", id).get();
 
         if (querySnapshot.empty) {
             console.warn(`No document found with field "id" = ${id} in collection ${collectionId}`);
-            return null;
-        }
- 
-        const userDoc = querySnapshot.docs[0];
-        const userData = userDoc.data();
-        console.log(`Found document:`, userData);
+            return [];
+        } 
+        const users: User[] = querySnapshot.docs.map((doc) => {
+            const userData = doc.data();
+            console.log("Found document:", userData);
+            return userData as User;
+        });
 
-        return userData as User;
+        return users;
     } catch (error) {
         console.error("Error fetching user document:", error);
-        return null;
+        return [];
     }
 };
+
 
 
 export const deleteUser = async (id: string, collectionId: string) => {

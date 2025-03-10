@@ -20,7 +20,7 @@ export const initDocUSer = async (req: Request, res: Response) => {
             const users = await LoadUser(collectionId);  
             res.status(200).json(users);  
             return;  
-        }
+        } 
 
         res.status(200).send({ message: 'Collection initialized' });
     } catch (error) {

@@ -14,7 +14,7 @@ export const AddUsers = () => {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [messageColor, setMessageColor] = useState("black");
-    const [loading, setLoading] = useState(false); // ✅ Add loading state
+    const [loading, setLoading] = useState(false); 
 
     const handleAddUser = async () => {
         if (!email) {
@@ -30,7 +30,7 @@ export const AddUsers = () => {
         };
 
         try {
-            setLoading(true); // ✅ Set loading to true before request
+            setLoading(true); 
             const response: SaveUserResponse = await saveUser(newUser);
 
             if (response.success) {
@@ -96,7 +96,7 @@ export const AddUsers = () => {
                 onClick={handleAddUser}
                 style={{ marginTop: "10px" }}
                 text="Add Users"
-                loading={loading} // ✅ Dynamically update loading state
+                loading={loading} 
             />
             {message && (
                 <p style={{ marginTop: "10px", color: messageColor }}>
